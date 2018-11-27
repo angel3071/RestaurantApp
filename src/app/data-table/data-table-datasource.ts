@@ -3,6 +3,8 @@ import { MatPaginator, MatSort } from '@angular/material';
 import { map } from 'rxjs/operators';
 import { Observable, of as observableOf, merge } from 'rxjs';
 
+import { OrderService } from '../services/order.service';
+import { Order } from '../models/order';
 // TODO: Replace this with your own data model type
 export interface DataTableItem {
   name: string;
@@ -10,39 +12,54 @@ export interface DataTableItem {
 }
 
 // TODO: replace this with real data from your application
-const EXAMPLE_DATA: DataTableItem[] = [
-  {id: 1, name: 'Hydrogen'},
-  {id: 2, name: 'Helium'},
-  {id: 3, name: 'Lithium'},
-  {id: 4, name: 'Beryllium'},
-  {id: 5, name: 'Boron'},
-  {id: 6, name: 'Carbon'},
-  {id: 7, name: 'Nitrogen'},
-  {id: 8, name: 'Oxygen'},
-  {id: 9, name: 'Fluorine'},
-  {id: 10, name: 'Neon'},
-  {id: 11, name: 'Sodium'},
-  {id: 12, name: 'Magnesium'},
-  {id: 13, name: 'Aluminum'},
-  {id: 14, name: 'Silicon'},
-  {id: 15, name: 'Phosphorus'},
-  {id: 16, name: 'Sulfur'},
-  {id: 17, name: 'Chlorine'},
-  {id: 18, name: 'Argon'},
-  {id: 19, name: 'Potassium'},
-  {id: 20, name: 'Calcium'},
+/*const EXAMPLE_DATA: Order[] = [
+  {orderNumber: 1, customerName: 'Hydrogen', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 2, customerName: 'Helium', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 3, customerName: 'Lithium', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 4, customerName: 'Beryllium', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 5, customerName: 'Boron', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 5, customerName: 'Boron', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 6, customerName: 'Carbon', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 7, customerName: 'Nitrogen', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 8, customerName: 'Oxygen', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 9, customerName: 'Fluorine', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 10, customerName: 'Neon', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 11, customerName: 'Sodium', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 12, customerName: 'Magnesium', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 13, customerName: 'Aluminum', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 14, customerName: 'Silicon', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 15, customerName: 'Phosphorus', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 16, customerName: 'Sulfur', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 17, customerName: 'Chlorine', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 18, customerName: 'Argon', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 19, customerName: 'Potassium', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
+  {orderNumber: 20, customerName: 'Calcium', date: '12/12/2012', plate: 'none', time:'15:21', $key: '1212121'},
 ];
-
+*/
 /**
  * Data source for the DataTable view. This class should
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
-export class DataTableDataSource extends DataSource<DataTableItem> {
-  data: DataTableItem[] = EXAMPLE_DATA;
+export class DataTableDataSource extends DataSource<Order> {
+  // orderList: Order[];
+  data: Order[];
 
-  constructor(private paginator: MatPaginator, private sort: MatSort) {
+  constructor(private paginator: MatPaginator, private sort: MatSort,
+             private orderService: OrderService) {
     super();
+    this.orderService.getOrders()
+    .snapshotChanges()
+    .subscribe(item => {
+        this.data = [];
+        item.forEach(element => {
+            let x = element.payload.toJSON();
+            x["$key"] = element.key;
+            this.data.push(x as Order);
+            //this.plateUrls.push(storage.ref((x as Order).plateImage).getDownloadURL());
+        })
+    })
+    // this.data = this.orderList;
   }
 
   /**
@@ -50,7 +67,7 @@ export class DataTableDataSource extends DataSource<DataTableItem> {
    * the returned stream emits new items.
    * @returns A stream of the items to be rendered.
    */
-  connect(): Observable<DataTableItem[]> {
+  connect(): Observable<Order[]> {
     // Combine everything that affects the rendered data into one update
     // stream for the data-table to consume.
     const dataMutations = [
@@ -77,7 +94,7 @@ export class DataTableDataSource extends DataSource<DataTableItem> {
    * Paginate the data (client-side). If you're using server-side pagination,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getPagedData(data: DataTableItem[]) {
+  private getPagedData(data: Order[]) {
     const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
     return data.splice(startIndex, this.paginator.pageSize);
   }
@@ -86,7 +103,7 @@ export class DataTableDataSource extends DataSource<DataTableItem> {
    * Sort the data (client-side). If you're using server-side sorting,
    * this would be replaced by requesting the appropriate data from the server.
    */
-  private getSortedData(data: DataTableItem[]) {
+  private getSortedData(data: Order[]) {
     if (!this.sort.active || this.sort.direction === '') {
       return data;
     }
@@ -94,8 +111,11 @@ export class DataTableDataSource extends DataSource<DataTableItem> {
     return data.sort((a, b) => {
       const isAsc = this.sort.direction === 'asc';
       switch (this.sort.active) {
-        case 'name': return compare(a.name, b.name, isAsc);
-        case 'id': return compare(+a.id, +b.id, isAsc);
+        case 'customerName': return compare(a.customerName, b.customerName, isAsc);
+        case 'date': return compare(a.date, b.date, isAsc);
+        case 'plate': return compare(a.plate, b.plate, isAsc);
+        case 'time': return compare(a.time, b.time, isAsc);
+        case 'orderNumber': return compare(+a.orderNumber, +b.orderNumber, isAsc);
         default: return 0;
       }
     });

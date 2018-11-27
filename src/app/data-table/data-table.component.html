@@ -1,19 +1,71 @@
 <div class="mat-elevation-z8 data-table">
-  <table mat-table class="full-width-table" [dataSource]="dataSource" matSort aria-label="Elements">
+  <table mat-table class="full-width-table" [dataSource]="dataSource" multiTemplateDataRows matSort aria-label="Elements">
     <!-- Id Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-      <td mat-cell *matCellDef="let row">{{row.id}}</td>
+    <ng-container matColumnDef="orderNumber">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>OrderNumber</th>
+      <td mat-cell *matCellDef="let row">{{row.orderNumber}}</td>
     </ng-container>
 
     <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-      <td mat-cell *matCellDef="let row">{{row.name}}</td>
+    <ng-container matColumnDef="plate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Plate</th>
+      <td mat-cell *matCellDef="let row">{{row.plate}}</td>
+    </ng-container>
+    <!-- Name Column -->
+    <ng-container matColumnDef="customerName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Name</th>
+      <td mat-cell *matCellDef="let row">{{row.customerName}}</td>
+    </ng-container>
+    <!-- Name Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+      <td mat-cell *matCellDef="let row">{{row.date}}</td>
+    </ng-container>
+    <!-- Name Column -->
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>
+      <td mat-cell *matCellDef="let row">{{row.time}}</td>
     </ng-container>
 
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button
+        matTooltip="The order is ready to serve!"
+        aria-label="Button that displays send kitchen action">
+            <i class="fas fa-concierge-bell"></i>
+          </button>
+      </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="expandedDetail">
+        <td mat-cell *matCellDef="let row" 
+        [style.backgroundColor]="statusBackgroundColors[row.status]"
+        [attr.colspan]="displayedColumns.length">
+          <div class="example-element-detail"
+               [@detailExpand]="row == expandedRow ? 'expanded' : 'collapsed'">
+               <div class="example-element-diagram">
+                  <img class="plate-img" src="{{row.plateImage}}" >
+                </div>
+            <div class="example-element-description">
+              {{row.comments}}
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+        class="example-element-row"
+        matTooltip="Info about the status"
+        [class.example-expanded-row]="expandedRow === row"
+        [style.backgroundColor]="statusBackgroundColors[row.status]"
+        (click)="expandedRow = row">
+
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
   </table>
 
   <mat-paginator #paginator
