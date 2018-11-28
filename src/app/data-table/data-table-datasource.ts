@@ -112,10 +112,9 @@ export class DataTableDataSource extends DataSource<Order> {
       const isAsc = this.sort.direction === 'asc';
       switch (this.sort.active) {
         case 'customerName': return compare(a.customerName, b.customerName, isAsc);
-        case 'date': return compare(a.date, b.date, isAsc);
         case 'plate': return compare(a.plate, b.plate, isAsc);
-        case 'time': return compare(a.time, b.time, isAsc);
         case 'orderNumber': return compare(+a.orderNumber, +b.orderNumber, isAsc);
+        case 'dateTime': return compare(a.dateTime, b.dateTime, isAsc);
         default: return 0;
       }
     });

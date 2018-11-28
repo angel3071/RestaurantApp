@@ -4,8 +4,7 @@ export interface Order {
     plate: string;
     plateImage: string;
     orderNumber: number;
-    time: string;
-    date: string;
+    dateTime: string;
     status: string;
     comments: string;
     

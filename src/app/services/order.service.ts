@@ -22,10 +22,22 @@ export class OrderService {
           customerName: order.customerName,
           orderNumber: order.orderNumber,
           plate: order.plate,
-          time: order.time,
-          date: order.date
-
+          plateImage: order.plateImage,
+          dateTime: order.dateTime,
+          status: order.status,
+          comments: order.comments
       });
 
+  }
+  updateOrder(order: Order){
+      this.orderList.update(order.$key, {
+        customerName: order.customerName,
+        orderNumber: order.orderNumber,
+        plate: order.plate,
+        plateImage: order.plateImage,
+        dateTime: order.dateTime,
+        status: order.status,
+        comments: order.comments
+      });
   }
 }

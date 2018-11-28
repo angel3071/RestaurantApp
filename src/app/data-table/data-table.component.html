@@ -17,23 +17,26 @@
       <td mat-cell *matCellDef="let row">{{row.customerName}}</td>
     </ng-container>
     <!-- Name Column -->
-    <ng-container matColumnDef="date">
+    <ng-container matColumnDef="dateTime">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-      <td mat-cell *matCellDef="let row">{{row.date}}</td>
+      <td mat-cell *matCellDef="let row">{{row.dateTime}}</td>
     </ng-container>
-    <!-- Name Column -->
-    <ng-container matColumnDef="time">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>
-      <td mat-cell *matCellDef="let row">{{row.time}}</td>
-    </ng-container>
+
 
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td mat-cell *matCellDef="let row">
         <button mat-icon-button
-        matTooltip="The order is ready to serve!"
-        aria-label="Button that displays send kitchen action">
+                (click)="openDialogOrderReady(row)"
+                matTooltip="The order is ready to serve!"
+                aria-label="Button that displays send kitchen action">
             <i class="fas fa-concierge-bell"></i>
+          </button>
+          <button mat-icon-button
+                  (click)="openDialogOrderServed(row)"
+                  matTooltip="The order is already served"
+                  aria-label="Button that displays served action">
+            <i class="fas fa-utensils"></i>
           </button>
       </td>
     </ng-container>
