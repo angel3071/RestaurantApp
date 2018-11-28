@@ -6,7 +6,9 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { DataTableComponent } from './data-table/data-table.component';
 
 const routes: Routes = [
-  { path: 'dashboard', component: MyNavComponent},
+  { path: 'dashboard', 
+    component: MyNavComponent,
+    canActivate: [AuthGuardService]},
   { path: 'login', component: LoginComponent},
   { path: '', redirectTo: '/dashboard', pathMatch: 'full'}
 ];
