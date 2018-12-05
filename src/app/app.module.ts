@@ -13,7 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatTableModule, MatPaginatorModule, MatSortModule, 
   MatToolbarModule, MatSidenavModule, MatIconModule, MatListModule , MatDialogModule,
   MatCardModule,  MatInputModule,
-  MatMenuModule, MatProgressSpinnerModule} from '@angular/material';
+  MatMenuModule, MatProgressSpinnerModule, MatTooltipModule} from '@angular/material';
 import { DataTableComponent } from './data-table/data-table.component';
 import { MyNavComponent } from './my-nav/my-nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -50,6 +50,7 @@ import { AuthGuardService } from './services/auth-guard.service';
     MatProgressSpinnerModule,
     LayoutModule,
     MatToolbarModule,
+    MatTooltipModule,
     MatSidenavModule,
     MatIconModule,
     MatListModule,

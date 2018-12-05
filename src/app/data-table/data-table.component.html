@@ -2,49 +2,53 @@
   <table mat-table class="full-width-table" [dataSource]="dataSource" multiTemplateDataRows matSort aria-label="Elements">
     <!-- Id Column -->
     <ng-container matColumnDef="orderNumber">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>OrderNumber</th>
-      <td mat-cell *matCellDef="let row">{{row.orderNumber}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Orden</th>
+      <td mat-cell *matCellDef="let row">{{row.$key.substr(-4)}}</td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="plate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Plate</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Platillo</th>
       <td mat-cell *matCellDef="let row">{{row.plate}}</td>
     </ng-container>
     <!-- Name Column -->
     <ng-container matColumnDef="customerName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Name</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
       <td mat-cell *matCellDef="let row">{{row.customerName}}</td>
     </ng-container>
     <!-- Name Column -->
     <ng-container matColumnDef="dateTime">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-      <td mat-cell *matCellDef="let row">{{row.dateTime}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha y hora</th>
+      <td mat-cell *matCellDef="let row">{{row.dateTime | date:'HH:mm:ss dd/MM/yy'}}</td>
     </ng-container>
 
 
     <ng-container matColumnDef="action">
-      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <th mat-header-cell *matHeaderCellDef>Acción</th>
       <td mat-cell *matCellDef="let row">
-        <button mat-icon-button
+          <div class="example-button-row">
+            <button mat-mini-fab
+               color="primary"
                 (click)="openDialogOrderReady(row)"
-                matTooltip="The order is ready to serve!"
+                matTooltip="La orden está lista!"
                 aria-label="Button that displays send kitchen action">
-            <i class="fas fa-concierge-bell"></i>
-          </button>
-          <button mat-icon-button
+                <i class="fas fa-concierge-bell"></i>
+            </button>
+            <button mat-mini-fab
                   (click)="openDialogOrderServed(row)"
-                  matTooltip="The order is already served"
+                  matTooltip="La orden fue servida!"
                   aria-label="Button that displays served action">
-            <i class="fas fa-utensils"></i>
-          </button>
+                <i class="fas fa-utensils"></i>
+            </button>
+          </div>
       </td>
     </ng-container>
 
 
     <ng-container matColumnDef="expandedDetail">
         <td mat-cell *matCellDef="let row" 
-        [style.backgroundColor]="statusBackgroundColors[row.status]"
+        [style.backgroundColor]="statusBackgroundColors[row.status].back"
+        [style.color]="statusBackgroundColors[row.status].font"
         [attr.colspan]="displayedColumns.length">
           <div class="example-element-detail"
                [@detailExpand]="row == expandedRow ? 'expanded' : 'collapsed'">
@@ -62,9 +66,11 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"
         class="example-element-row"
-        matTooltip="Info about the status"
+        [matTooltip]="row.status"
+        matTooltipPosition="before"
         [class.example-expanded-row]="expandedRow === row"
-        [style.backgroundColor]="statusBackgroundColors[row.status]"
+        [style.color]="statusBackgroundColors[row.status].font"
+        [style.backgroundColor]="statusBackgroundColors[row.status].back"
         (click)="expandedRow = row">
 
     </tr>
